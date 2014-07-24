@@ -89,8 +89,23 @@ int main(void) {
         // read gamepad data
         gamepad_read();
 
-        if (GAMEPAD_REBOOT_ON)
-            reboot();
+        /* if (GAMEPAD_REBOOT_ON) */
+        /*     reboot(); */
+
+	gamepad_state.l_y_axis = 0x80;
+	gamepad_state.l_x_axis = 0x80;
+	if (GAMEPAD_UP_ON) {
+	  gamepad_state.l_y_axis = 0x00;
+	}
+	if (GAMEPAD_DOWN_ON) {
+	  gamepad_state.l_y_axis = 0xFF;
+	}
+	if (GAMEPAD_LEFT_ON) {
+	  gamepad_state.l_x_axis = 0x00;
+	}
+	if (GAMEPAD_RIGHT_ON) {
+	  gamepad_state.l_x_axis = 0xFF;
+	}
 
 		if (GAMEPAD_UP_ON) {
 			gamepad_state.direction = 0;
@@ -160,13 +175,13 @@ int main(void) {
 			gamepad_state.start_btn = 1;
 		}
 
-		if (GAMEPAD_SELECT_ON) {
-			gamepad_state.select_btn = 1;
-		}
+		/* if (GAMEPAD_SELECT_ON) { */
+		/* 	gamepad_state.select_btn = 1; */
+		/* } */
 
-		if (GAMEPAD_PS_ON) {
-			gamepad_state.ps_btn = 1;
-		}
+		/* if (GAMEPAD_PS_ON) { */
+		/* 	gamepad_state.ps_btn = 1; */
+		/* } */
 
 		usb_gamepad_send();
 	}

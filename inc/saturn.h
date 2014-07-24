@@ -55,9 +55,9 @@ uint8_t VIRTUAL = 0;
 #define DPAD_LEFT       (1 << 2)
 #define DPAD_RIGHT      (1 << 3)
 
-#define VIRTUAL_PS      (1 << 0)
-#define VIRTUAL_REBOOT  (1 << 1)
-#define VIRTUAL_SELECT  (1 << 2)
+/* #define VIRTUAL_PS      (1 << 0) */
+/* #define VIRTUAL_REBOOT  (1 << 1) */
+/* #define VIRTUAL_SELECT  (1 << 2) */
 #define VIRTUAL_START   (1 << 3)
 
 /**********************************************************
@@ -70,8 +70,8 @@ uint8_t VIRTUAL = 0;
 #define GAMEPAD_SQUARE_ON	    (BUTTON & BUTTON_X)
 
 #define GAMEPAD_L1_ON	        (BUTTON & BUTTON_L)
-#define GAMEPAD_L2_ON	        (BUTTON & BUTTON_Z)
-#define GAMEPAD_R1_ON	        (BUTTON & BUTTON_R)
+#define GAMEPAD_L2_ON	        (BUTTON & BUTTON_R)
+#define GAMEPAD_R1_ON	        (BUTTON & BUTTON_Z)
 #define GAMEPAD_R2_ON	        (BUTTON & BUTTON_C)
 
 #define GAMEPAD_UP_ON	        (DPAD & DPAD_UP)
@@ -80,10 +80,10 @@ uint8_t VIRTUAL = 0;
 #define GAMEPAD_RIGHT_ON	    (DPAD & DPAD_RIGHT)
 
 #define GAMEPAD_START_ON		(VIRTUAL & VIRTUAL_START)
-#define GAMEPAD_SELECT_ON	    (VIRTUAL & VIRTUAL_SELECT)
+/* #define GAMEPAD_SELECT_ON	    (VIRTUAL & VIRTUAL_SELECT) */
 
-#define GAMEPAD_PS_ON		    (VIRTUAL & VIRTUAL_PS)
-#define GAMEPAD_REBOOT_ON	    (VIRTUAL & VIRTUAL_REBOOT)
+/* #define GAMEPAD_PS_ON		    (VIRTUAL & VIRTUAL_PS) */
+/* #define GAMEPAD_REBOOT_ON	    (VIRTUAL & VIRTUAL_REBOOT) */
 
 /**********************************************************
  * saturn pinout
@@ -134,7 +134,7 @@ void gamepad_init(void) {
 
 void gamepad_read(void) {
     // physical start is 'special'
-    uint8_t special = 0;
+    /* uint8_t special = 0; */
     // set output high, high
     PORTD |= SELECT0;
     PORTD |= SELECT1;
@@ -158,7 +158,7 @@ void gamepad_read(void) {
     BUTTON |= (PINB & DATA0) ? 0 : BUTTON_B;
     BUTTON |= (PINB & DATA1) ? 0 : BUTTON_C;
     BUTTON |= (PINB & DATA2) ? 0 : BUTTON_A;
-    special = (PINB & DATA3) ? 0 : 1;
+    VIRTUAL = (PINB & DATA3) ? 0 : VIRTUAL_START;
     // set output low, high
     PORTD &= ~SELECT0;
     PORTD |= SELECT1;
@@ -174,34 +174,34 @@ void gamepad_read(void) {
     // start    : special + r1
     // ps       : select + start
     // reboot   : select + start + l2 + r2
-    VIRTUAL = 0;
-    if (special) {
-        if (GAMEPAD_L1_ON && GAMEPAD_R1_ON) {
-            if (GAMEPAD_L2_ON && GAMEPAD_R2_ON) {
-                // reboot
-                VIRTUAL = VIRTUAL_REBOOT;
-                // eat buttons
-                BUTTON &= ~BUTTON_Z;
-                BUTTON &= ~BUTTON_C;
-            } else {
-                // ps
-                VIRTUAL = VIRTUAL_PS;
-            }
-            // eat buttons
-            BUTTON &= ~BUTTON_L;
-            BUTTON &= ~BUTTON_R;
-        } else if (GAMEPAD_L1_ON) {
-            // select
-            VIRTUAL |= VIRTUAL_SELECT;
-            // eat buttons
-            BUTTON &= ~BUTTON_L;
-        } else if (GAMEPAD_R1_ON) {
-            // start
-            VIRTUAL |= VIRTUAL_START;
-            // eat buttons
-            BUTTON &= ~BUTTON_R;
-        }
-    }
+    /* VIRTUAL = 0; */
+    /* if (special) { */
+    /*     if (GAMEPAD_L1_ON && GAMEPAD_R1_ON) { */
+    /*         if (GAMEPAD_L2_ON && GAMEPAD_R2_ON) { */
+    /*             // reboot */
+    /*             VIRTUAL = VIRTUAL_REBOOT; */
+    /*             // eat buttons */
+    /*             BUTTON &= ~BUTTON_Z; */
+    /*             BUTTON &= ~BUTTON_C; */
+    /*         } else { */
+    /*             // ps */
+    /*             VIRTUAL = VIRTUAL_PS; */
+    /*         } */
+    /*         // eat buttons */
+    /*         BUTTON &= ~BUTTON_L; */
+    /*         BUTTON &= ~BUTTON_R; */
+    /*     } else if (GAMEPAD_L1_ON) { */
+    /*         // select */
+    /*         VIRTUAL |= VIRTUAL_SELECT; */
+    /*         // eat buttons */
+    /*         BUTTON &= ~BUTTON_L; */
+    /*     } else if (GAMEPAD_R1_ON) { */
+    /*         // start */
+    /*         VIRTUAL |= VIRTUAL_START; */
+    /*         // eat buttons */
+    /*         BUTTON &= ~BUTTON_R; */
+    /*     } */
+    /* } */
 }
 
 #endif
